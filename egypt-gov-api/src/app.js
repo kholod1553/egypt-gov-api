@@ -6,4 +6,7 @@ app.set('json spaces', 2);
 app.use(cors());
 app.use(express.json());
 app.use('/api', servicesRoutes);
+app.get("/", (req, res) => {
+  res.send("Egypt Gov API is running...");
+});
 export default app;
