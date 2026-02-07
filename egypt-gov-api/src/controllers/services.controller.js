@@ -1,6 +1,6 @@
 import { supabase } from '../supabase/client.js';
 
-export const getAllServices = async (_req, res) => {
+export const getAllServices = async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('government_services')
