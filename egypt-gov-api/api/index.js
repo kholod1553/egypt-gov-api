@@ -7,18 +7,23 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Supabase Client
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ضع كل الـ Routes هنا
-// مثال:
+// Routes
 app.get('/api', (req, res) => {
-  res.json({ message: 'Egypt Gov API is working!' });
+  res.json({ 
+    message: 'Egypt Gov API is working!',
+    status: 'success',
+    timestamp: new Date().toISOString()
+  });
 });
 
 app.get('/api/locations', async (req, res) => {
@@ -28,13 +33,20 @@ app.get('/api/locations', async (req, res) => {
       .select('*');
     
     if (error) throw error;
-    res.json(data);
+    res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
   }
 });
+
+// Export for Vercel Serverless
 export default app;
-if(process.env.NODE_ENV !== 'production') {
+
+// Local development
+if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
